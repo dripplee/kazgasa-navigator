@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>КазГАСА-Навигатор</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f5f1;--card:#fff;--tx:#1d1d1b;--mu:#6b6a64;--ac:#1f5f5b;--acx:#fff;--bd:#dedcd4;--warn:#fff4dc;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141614;--card:#1e211f;--tx:#ecebe6;--mu:#a3a29a;--ac:#5fb3ab;--acx:#10201e;--bd:#33372f;--warn:#33291a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141614;--card:#1e211f;--tx:#ecebe6;--mu:#a3a29a;--ac:#5fb3ab;--acx:#10201e;--bd:#33372f;--warn:#33291a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--mu);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:12px 0 6px;font-size:15px}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:11px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--bd);border-radius:999px;padding:8px 14px;background:var(--bg);color:var(--tx);font:inherit;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+button.go{width:100%;margin-top:18px;padding:14px;border:0;border-radius:12px;background:var(--ac);color:var(--acx);font:inherit;font-weight:700;font-size:17px;cursor:pointer}
+button.go:disabled{opacity:.6}
+.note{background:var(--warn);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+.sec h2{font-size:17px;margin:0 0 6px;color:var(--ac)}
+.sec p{margin:0;white-space:pre-wrap}
+.src{font-size:13px;color:var(--mu)}
+.src a{color:var(--ac);word-break:break-all}
+</style>
+</head>
+<body>
+<main>
+<h1>🏛️ КазГАСА-Навигатор</h1>
+<p class="sub">ИИ-помощник абитуриента: подходит ли тебе специальность, сколько стоит учёба и что ждёт после выпуска.</p>
+
+<div class="card">
+  <label for="spec">Куда хочешь поступить</label>
+  <select id="spec">
+    <option>Архитектура</option>
+    <option>Градостроительство</option>
+    <option>Дизайн архитектурной среды</option>
+    <option>Строительство</option>
+  </select>
+  <label for="ent">Балл ЕНТ</label>
+  <input id="ent" type="number" inputmode="numeric" min="0" max="140" placeholder="например, 118">
+  <div class="row">
+    <div><label for="math">Математика (1–5)</label><input id="math" type="number" inputmode="numeric" min="1" max="5" placeholder="4"></div>
+    <div><label for="phys">Физика (1–5)</label><input id="phys" type="number" inputmode="numeric" min="1" max="5" placeholder="4"></div>
+  </div>
+  <label for="draw">Рисунок и композиция: как оцениваешь себя (1–5)</label>
+  <input id="draw" type="number" inputmode="numeric" min="1" max="5" placeholder="3">
+  <label for="cre">Творческий экзамен</label>
+  <select id="cre">
+    <option value="не сдавал">Ещё не сдавал(а)</option>
+    <option value="сдал">Уже сдал(а)</option>
+    <option value="не знаю что это">Не знаю, что это</option>
+  </select>
+  <div id="creWrap" style="display:none">
+    <label for="creScore">Балл за творческий экзамен</label>
+    <input id="creScore" type="number" inputmode="numeric" min="0" placeholder="например, 80">
+  </div>
+  <label>Интересы</label>
+  <div class="chips" id="chips"></div>
+  <button class="go" id="go">Получить разбор</button>
+  <div class="note">Прототип: разбор опирается на небольшую базу данных (источники внизу). Цифры из неё нужно проверять на сайте kazgasa.kz.</div>
+</div>
+
+<div id="out"></div>
+
+<div class="card src">
+  <b>Источники базы знаний</b><br>
+  • BES.media, 17.06.2026: порог на грант 120 баллов (творческие специальности), стоимость 2 млн тг/год, рассрочка и скидки:
+  <a href="https://bes.media/news/abiturienti-zhaluyutsya-na-izmenenie-usloviy-postupleniya-v-kazgasa/">bes.media</a><br>
+  • Informburo, 2026: средняя зарплата инженеров 702 тыс. тг:
+  <a href="https://informburo.kz/novosti/do-11-mln-tenge-professii-s-samymi-vysokimi-zarplatami-nazvali-v-kazaxstane">informburo.kz</a><br>
+  • Бюро нац. статистики, II кв. 2026: средняя зарплата по стране около 486 тыс. тг (источники расходятся: 448–486 тыс.):
+  <a href="https://www.caravan.kz/news/nazvana-srednjaja-zarplata-v-kazahstane-2/">caravan.kz</a>
+</div>
+</main>
+
+<script>
+var INTERESTS=["Рисование","Математика","Физика","Дизайн","3D-моделирование","История и города","Работа на стройке","Экология"];
+var picked={};
+var chips=document.getElementById("chips");
+INTERESTS.forEach(function(t){
+  var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=t;b.setAttribute("aria-pressed","false");
+  b.onclick=function(){picked[t]=!picked[t];b.setAttribute("aria-pressed",String(!!picked[t]))};
+  chips.appendChild(b);
+});
+
+document.getElementById("cre").onchange=function(){document.getElementById("creWrap").style.display=this.value==="сдал"?"block":"none"};
+var out=document.getElementById("out"),go=document.getElementById("go");
+
+function render(text,data){
+  out.innerHTML="";
+  var parts=text.split(/^##\s*/m).filter(function(s){return s.trim()});
+  parts.forEach(function(p){
+    var i=p.indexOf("\n");var h=i>-1?p.slice(0,i):p;var body=i>-1?p.slice(i+1):"";
+    var c=document.createElement("div");c.className="card sec";
+    var h2=document.createElement("h2");h2.textContent=h.trim();
+    var pp=document.createElement("p");pp.textContent=body.trim();
+    c.appendChild(h2);c.appendChild(pp);out.appendChild(c);
+  });
+}
+
+go.onclick=async function(){
+  var ent=document.getElementById("ent").value;
+  if(!ent){alert("Введи балл ЕНТ");return}
+  var data={
+    specialty:document.getElementById("spec").value,
+    ent:ent,
+    math:document.getElementById("math").value||"не указано",
+    physics:document.getElementById("phys").value||"не указано",
+    drawing:document.getElementById("draw").value||"не указано",
+    creative:document.getElementById("cre").value,
+    creativeScore:document.getElementById("cre").value==="сдал"?(document.getElementById("creScore").value||"не указан"):"",
+    interests:Object.keys(picked).filter(function(k){return picked[k]}).join(", ")||"не указаны"
+  };
+  go.disabled=true;go.textContent="ИИ анализирует…";
+  out.innerHTML="";
+  try{
+    var resp=await fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+    var j=await resp.json();
+    if(!resp.ok)throw {code:resp.status===429?"rate_limited":"error"};
+    render(j.text,data);
+  }catch(e){
+    out.innerHTML='<div class="card">Не получилось получить разбор'+(e&&e.code==="rate_limited"?" (слишком часто, попробуйте через минуту)":"")+". Попробуйте ещё раз.</div>";
+  }finally{go.disabled=false;go.textContent="Получить разбор"}
+};
+</script>
+</body>
+</html>
